@@ -9,9 +9,10 @@ var floatMatcher = regexp.MustCompile(`^-?[0-9]{1,}\.[0-9]{1,}$`)
 var intMatcher = regexp.MustCompile(`^(-?[1-9]+\d*)$|^0$`) // Leading 0 is not considered an int
 var boolMatcher = regexp.MustCompile(`^true|false$`)
 
-// Typer object to extract a valid type from the given value
+// Typer object to extract a valid type from the given string value
 type Typer interface {
 	GetType(string) string
+	GetLikelyType([]string) string
 }
 
 // DefaultTyper provides type methods to be used by implementation classes
