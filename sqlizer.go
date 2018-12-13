@@ -38,6 +38,18 @@ func (s *Sqlizer) MakeDDL(tableName string) string {
 	return sb.String()
 }
 
+// MakeInserts produces the `INSERT` statements for each row given
+func (s *Sqlizer) MakeInserts(tableName string) []string {
+	inserts := make([]string, len(s.Rows))
+	headers := strings.Join(s.Headers, ",")
+
+	for i, r := range s.Rows {
+		inserts[i] = fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s);", tableName, headers, strings.Join(r, ","))
+	}
+
+	return inserts
+}
+
 // Transpose a slice of [a x b] to a slice of [b x a]
 func transpose(slice [][]string) [][]string {
 	aLen := len(slice[0])
