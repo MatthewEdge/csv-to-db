@@ -4,13 +4,20 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func main() {
 
+	serverFlag := flag.Bool("server", false, "Start the app as a HTTP server?")
 	pathFlag := flag.String("path", "", "Full path to the CSV file to parse")
 	flag.Parse()
+
+	if *serverFlag {
+		server()
+		os.Exit(0)
+	}
 
 	csv, err := FromFile(*pathFlag)
 
