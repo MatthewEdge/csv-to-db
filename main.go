@@ -23,7 +23,7 @@ func main() {
 
 	if err != nil {
 		fmt.Printf("Failed to convert CSV file: %s", err)
-		return
+		os.Exit(1)
 	}
 
 	s := &Sqlizer{
@@ -33,9 +33,10 @@ func main() {
 	}
 
 	ddl := s.MakeDDL(csv.Name)
-	inserts := strings.Join(s.MakeInserts(csv.Name), "\n")
+	inserts := s.MakeInserts(csv.Name)
 
-	fmt.Printf("%s\n%s", ddl, inserts)
+	fmt.Printf("%s\n%s", ddl, strings.Join(inserts, "\n"))
+	os.Exit(0)
 }
 
 func server() {
