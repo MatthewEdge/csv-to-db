@@ -17,7 +17,7 @@ type Sqlizer struct {
 func (s *Sqlizer) MakeDDL(tableName string) string {
 	var sb strings.Builder
 
-	sb.WriteString(fmt.Sprintf("CREATE TABLE %s (\n", tableName))
+	sb.WriteString(fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (\n", tableName))
 
 	transposed := transpose(s.Rows)
 	for i, h := range s.Headers {
