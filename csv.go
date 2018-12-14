@@ -19,7 +19,8 @@ type CsvFile struct {
 }
 
 // Regexp to extract filename from a HTTP request
-var fileNameMatcher = regexp.MustCompile(`^.*filename="(.*).csv"?`)
+var httpFileNameMatcher = regexp.MustCompile(`^.*filename="(.*).csv"?`)
+var fileMatcher = regexp.MustCompile(`^.*/(.*)\.csv?`)
 
 // FromFile will create a parsed CsvFile instance from the given file path
 func FromFile(path string) (*CsvFile, error) {
@@ -38,15 +39,15 @@ func FromFile(path string) (*CsvFile, error) {
 	}
 
 	// Grab filename and then drop unnecessary headers and footers
-	matched := fileNameMatcher.FindStringSubmatch(parsed[1][0])
+	matched := fileMatcher.FindStringSubmatch(path)
 
-	if len(matched) < 1 {
-		fmt.Printf("Failed to extract filename from CSV file")
-		return nil, errors.New("Failed to extract filename from csv file")
+	if len(matched) <= 1 {
+		fmt.Println("Failed to parse filename for CSV file")
+		return nil, errors.New("Failed to parse filename for CSV file")
 	}
 
-	tableName := fileNameMatcher.FindStringSubmatch(parsed[1][0])[1]
-	csv := parsed[3 : len(parsed)-1]
+	tableName := matched[1]
+	csv := parsed
 	headers := csv[0]
 	rows := csv[1:]
 
@@ -66,7 +67,7 @@ func FromHTTP(req *http.Request) (*CsvFile, error) {
 	}
 
 	// Grab filename and then drop unnecessary headers and footers
-	tableName := fileNameMatcher.FindStringSubmatch(parsed[1][0])[1]
+	tableName := httpFileNameMatcher.FindStringSubmatch(parsed[1][0])[1]
 	csv := parsed[3 : len(parsed)-1]
 	headers := csv[0]
 	rows := csv[1:]
