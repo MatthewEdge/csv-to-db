@@ -1,11 +1,11 @@
 version: '3.7'
 
 services:
-    knock:
+    app:
       build:
         context: .
-      container_name: knock
-      hostname: knock
+      container_name: tabload
+      hostname: tabload
       environment:
         DB_HOST: db
         DB_PORT: 5432
